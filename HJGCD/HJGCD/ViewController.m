@@ -29,62 +29,126 @@
     dispatch_queue_t  concurrentQueue = dispatch_queue_create("concurrent", DISPATCH_QUEUE_CONCURRENT);
     
     //1 异步执行串行队列
-    dispatch_async(serialQueue, ^{
-       --self.ticktCount ;
-        NSLog(@"%@ ----- %ld",[NSThread currentThread] , self.ticktCount);
-    });
-    
-    
-    
-    dispatch_async(serialQueue, ^{
-        --self.ticktCount ;
-        NSLog(@"%@ ----- %ld",[NSThread currentThread] , self.ticktCount);
-    });
-    
-
-    dispatch_async(serialQueue, ^{
-        --self.ticktCount ;
-        NSLog(@"%@ ----- %ld",[NSThread currentThread] , self.ticktCount);
-    });
-    
-    dispatch_async(serialQueue, ^{
-        --self.ticktCount ;
-        NSLog(@"%@ ----- %ld",[NSThread currentThread] , self.ticktCount);
-    });
-    
-    dispatch_async(serialQueue, ^{
-        --self.ticktCount ;
-        NSLog(@"%@ ----- %ld",[NSThread currentThread] , self.ticktCount);
-    });
+//    dispatch_async(serialQueue, ^{
+//       --self.ticktCount ;
+//        NSLog(@"%@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
+//
+//
+//
+//    dispatch_async(serialQueue, ^{
+//        --self.ticktCount ;
+//        NSLog(@"%@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
+//
+//
+//    dispatch_async(serialQueue, ^{
+//        --self.ticktCount ;
+//        NSLog(@"%@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
+//
+//    dispatch_async(serialQueue, ^{
+//        --self.ticktCount ;
+//        NSLog(@"%@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
+//
+//    dispatch_async(serialQueue, ^{
+//        --self.ticktCount ;
+//        NSLog(@"%@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
     
     
     //2 异步执行并发队列
 //    dispatch_async(concurrentQueue, ^{
 //
+//        --self.ticktCount ;
+//        NSLog(@"task 1  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
 //    });
 //
-    
+//    dispatch_async(concurrentQueue, ^{
+//
+//        --self.ticktCount ;
+//        NSLog(@"task 2 %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
+//
+//    dispatch_async(concurrentQueue, ^{
+//
+//        --self.ticktCount ;
+//        NSLog(@"task 3 %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
+//
+//    dispatch_async(concurrentQueue, ^{
+//
+//        --self.ticktCount ;
+//        NSLog(@"task 4 %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
+//
+//    dispatch_async(concurrentQueue, ^{
+//
+//        --self.ticktCount ;
+//        NSLog(@"task 5  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
     
     //3 同步执行串行队列 ： 3.1 新建的串行队列 3.2 主线程队列
-    //3.1 新建的串行队列
-//    dispatch_sync(serialQueue, ^{
-//
-//    });
+    //3.1 新建的串行队列 ，首先判断目标队列是否有没完成的事情，如果有则等完成才能invoke 只是添加到队列，然后
+    dispatch_sync(serialQueue, ^{
+        --self.ticktCount ;
+        NSLog(@"task 1  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+    });
+
+    dispatch_sync(serialQueue, ^{
+        --self.ticktCount ;
+        NSLog(@"task 2  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+    });
+
+    dispatch_sync(serialQueue, ^{
+        --self.ticktCount ;
+        NSLog(@"task 3  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+    });
     
-    
-    //3.2 主线程队列
+    //3.2 主线程队列 crash 造成主线程死锁
 //    dispatch_sync(dispatch_get_main_queue(), ^{
 //
 //    });
-//
-    
-    
-    //4 同步执行并行队列
-//    dispatch_sync(concurrentQueue, ^{
-//
+    // 在执行函数的时候就崩掉了
+//    dispatch_sync(dispatch_get_main_queue(), ^{
+//        --self.ticktCount ;
+//        NSLog(@"task 1  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
 //    });
 //
+//    dispatch_sync(dispatch_get_main_queue(), ^{
+//        --self.ticktCount ;
+//        NSLog(@"task 2  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
 //
+//    dispatch_sync(dispatch_get_main_queue(), ^{
+//        --self.ticktCount ;
+//        NSLog(@"task 3  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
+//
+    
+    
+    //4 同步执行并行队列 把blog的东西加到主线程队列，然后直接执行掉，后面的调用还没有加到队列中来不存在资源争抢的问题
+//    dispatch_sync(concurrentQueue, ^{
+//        --self.ticktCount ;
+//        NSLog(@"task 1  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
+//
+//    dispatch_sync(concurrentQueue, ^{
+//        --self.ticktCount ;
+//        NSLog(@"task 2  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
+//
+//    dispatch_sync(concurrentQueue, ^{
+//        --self.ticktCount ;
+//        NSLog(@"task 3  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
+//
+//    dispatch_sync(concurrentQueue, ^{
+//        --self.ticktCount ;
+//        NSLog(@"task 4  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
+
     
     
     
