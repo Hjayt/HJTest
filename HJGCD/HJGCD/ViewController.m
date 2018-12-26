@@ -11,10 +11,15 @@
 
 
 @interface ViewController ()
-
+<
+    UITableViewDataSource,
+    UITableViewDelegate
+>
 @property (nonatomic , assign) long ticktCount;
 
 @property (nonatomic , strong)     dispatch_semaphore_t  lock;
+
+@property (nonatomic , strong) UITableView * tableView;
 
 @end
 
@@ -22,6 +27,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.title = @"GCDDemo";
+    
+    
+    
+    
+    
+    
+    
+    
+    
     self.ticktCount = 10;
     
     //   函数执行分两种；异步执行，同步执行， 队列分为两种 ：串行队列，并发队列   两种结合有 C42 种场景
@@ -201,6 +217,141 @@
     dispatch_semaphore_signal(self.lock);
   
     
+}
+
+#pragma mark-
+#pragma mark- UITableviewDataSource && delegate
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 3;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 30;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+   
+    dispatch_queue_create(<#const char * _Nullable label#>, <#dispatch_queue_attr_t  _Nullable attr#>)
+    UITableViewHeaderFooterView * view = []
+}
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 3;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+    switch (indexPath.section) {
+            case 0:
+        {
+                //异步函数
+            switch (indexPath.row) {
+                    case 0:
+                {
+                    //异步函数 目标队列：并行队列
+                    cell.textLabel.text = @"并行队列";
+                }
+                    break;
+                case 1:
+                {
+                    //异步函数 目标队列 ：串行队列(非主线程队列)
+                    cell.textLabel.text = @"串行队列(非主线程队列)";
+                }
+                    break;
+                
+                case 2:
+                {
+                    //目标队列：串行队列（主线程队列）
+                    cell.textLabel.text = @"串行队列(主线程队列)";
+                }
+                    break;
+                    
+            }
+            
+            
+        }
+            break;
+            
+            case 1:
+        {
+            //同步函数
+            switch (indexPath.row) {
+                    case 0:
+                {
+                    // 同步函数 目标队列 ：串行队列(非主线程队列)
+                    cell.textLabel.text = @"串行队列(非主线程队列)";
+                    
+                }
+                    break;
+                    
+                    case 1:
+                {
+                    //同步函数 目标队列 ：串行队列(主线程队列)
+                    cell.textLabel.text = @"串行对列(主线程队列)";
+                }
+                    break;
+                    
+                    case 2:
+                {
+                    //同步函数 目标队列 ： 并行队列
+                    cell.textLabel.text = @"并行队列";
+                }
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+        }
+            break;
+            
+            case 2:
+        {
+            // 异步同步混合
+            switch (indexPath.row) {
+                    case 0:
+                {
+                    //异步函数 block里调同步函数
+                    cell.textLabel.text = @"异步函数block里调同步函数";
+                }
+                    break;
+                    
+                    case 1:
+                {
+                    //同步函数 block里调异步函数
+                    cell.textLabel.text = @"同步函数block里调异步函数";
+                }
+                    break;
+                    
+                    
+                default:
+                    break;
+            }
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
+    
+    return cell;
+}
+
+
+#pragma mark-
+#pragma mark- Setter && Getter
+- (UITableView *)tableView {
+    if (!_tableView) {
+        _tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStyleGrouped];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
+        [_tableView registerClass:[UITableViewHeaderFooterView class] forCellReuseIdentifier:NSStringFromClass([UITableViewHeaderFooterView class])];
+        _tableView.rowHeight = 50.f;
+    }
+    return _tableView;
 }
 
 - (dispatch_semaphore_t)lock {

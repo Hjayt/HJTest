@@ -14,6 +14,7 @@
 		C43EC1842195567300035527 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C43EC1822195567300035527 /* LaunchScreen.storyboard */; };
 		C43EC1872195567300035527 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C43EC1862195567300035527 /* main.m */; };
 		C43EC1912195567300035527 /* HJGCDTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C43EC1902195567300035527 /* HJGCDTests.m */; };
+		C451A36B21D3A6C500A23028 /* HJGCDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C451A36A21D3A6C500A23028 /* HJGCDViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,8 @@
 		C43EC18C2195567300035527 /* HJGCDTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HJGCDTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C43EC1902195567300035527 /* HJGCDTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJGCDTests.m; sourceTree = "<group>"; };
 		C43EC1922195567300035527 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C451A36921D3A6C500A23028 /* HJGCDViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJGCDViewController.h; sourceTree = "<group>"; };
+		C451A36A21D3A6C500A23028 /* HJGCDViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJGCDViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +84,8 @@
 		C43EC1762195567100035527 /* HJGCD */ = {
 			isa = PBXGroup;
 			children = (
+				C451A36821D3A49500A23028 /* Controller */,
+				C451A36721D3A49500A23028 /* View */,
 				C43EC1772195567100035527 /* AppDelegate.h */,
 				C43EC1782195567100035527 /* AppDelegate.m */,
 				C43EC17A2195567100035527 /* ViewController.h */,
@@ -101,6 +106,22 @@
 				C43EC1922195567300035527 /* Info.plist */,
 			);
 			path = HJGCDTests;
+			sourceTree = "<group>";
+		};
+		C451A36721D3A49500A23028 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		C451A36821D3A49500A23028 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				C451A36921D3A6C500A23028 /* HJGCDViewController.h */,
+				C451A36A21D3A6C500A23028 /* HJGCDViewController.m */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -206,6 +227,7 @@
 				C43EC17C2195567100035527 /* ViewController.m in Sources */,
 				C43EC1872195567300035527 /* main.m in Sources */,
 				C43EC1792195567100035527 /* AppDelegate.m in Sources */,
+				C451A36B21D3A6C500A23028 /* HJGCDViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
