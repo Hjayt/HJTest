@@ -231,8 +231,29 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
    
-    dispatch_queue_create(<#const char * _Nullable label#>, <#dispatch_queue_attr_t  _Nullable attr#>)
-    UITableViewHeaderFooterView * view = []
+    UITableViewHeaderFooterView * view = [tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass([UITableViewHeaderFooterView class])];
+    switch (section) {
+            case 0:
+        {
+            view.textLabel.text = @"异步函数";
+        }
+            break;
+        
+            case 1:
+        {
+            view.textLabel.text = @"同步函数";
+        }
+            break;
+        
+            case 2:
+        {
+             view.textLabel.text = @"混合调用函数";
+        }
+            break;
+            
+    }
+    
+    return view;
 }
 
 
