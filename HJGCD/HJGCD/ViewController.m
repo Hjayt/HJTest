@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-
+#import "HJGCDViewController.h"
 
 
 @interface ViewController ()
@@ -15,9 +15,8 @@
     UITableViewDataSource,
     UITableViewDelegate
 >
-@property (nonatomic , assign) long ticktCount;
 
-@property (nonatomic , strong)     dispatch_semaphore_t  lock;
+@property (nonatomic , strong)  dispatch_semaphore_t  lock;
 
 @property (nonatomic , strong) UITableView * tableView;
 
@@ -27,8 +26,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.view.backgroundColor = [UIColor whiteColor];
     self.title = @"GCDDemo";
+    [self.view addSubview:self.tableView];
     
     
     
@@ -37,12 +37,10 @@
     
     
     
-    
-    self.ticktCount = 10;
     
     //   函数执行分两种；异步执行，同步执行， 队列分为两种 ：串行队列，并发队列   两种结合有 C42 种场景
-    dispatch_queue_t  serialQueue = dispatch_queue_create("serial", DISPATCH_QUEUE_SERIAL);
-    dispatch_queue_t  concurrentQueue = dispatch_queue_create("concurrent", DISPATCH_QUEUE_CONCURRENT);
+//    dispatch_queue_t  serialQueue = dispatch_queue_create("serial", DISPATCH_QUEUE_SERIAL);
+//    dispatch_queue_t  concurrentQueue = dispatch_queue_create("concurrent", DISPATCH_QUEUE_CONCURRENT);
     
     //1 异步执行串行队列
 //    dispatch_async(serialQueue, ^{
@@ -107,20 +105,20 @@
     
     //3 同步执行串行队列 ： 3.1 新建的串行队列 3.2 主线程队列
     //3.1 新建的串行队列 ，首先判断目标队列是否有没完成的事情，如果有则等完成才能invoke 只是添加到队列，然后
-    dispatch_sync(serialQueue, ^{
-        --self.ticktCount ;
-        NSLog(@"task 1  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
-    });
-
-    dispatch_sync(serialQueue, ^{
-        --self.ticktCount ;
-        NSLog(@"task 2  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
-    });
-
-    dispatch_sync(serialQueue, ^{
-        --self.ticktCount ;
-        NSLog(@"task 3  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
-    });
+//    dispatch_sync(serialQueue, ^{
+//        --self.ticktCount ;
+//        NSLog(@"task 1  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
+//
+//    dispatch_sync(serialQueue, ^{
+//        --self.ticktCount ;
+//        NSLog(@"task 2  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
+//
+//    dispatch_sync(serialQueue, ^{
+//        --self.ticktCount ;
+//        NSLog(@"task 3  %@ ----- %ld",[NSThread currentThread] , self.ticktCount);
+//    });
     
     //3.2 主线程队列 crash 造成主线程死锁
 //    dispatch_sync(dispatch_get_main_queue(), ^{
@@ -207,17 +205,7 @@
 }
 
 
-- (void)buyTicket {
-    
-//    dispatch_barrier_async(dispatch_get_global_queue(0, 0), ^{
-    dispatch_semaphore_wait(self.lock, 2);
-        self->_ticktCount --;
-        NSLog(@"ticket count ---- %ld ,%@",self->_ticktCount,[NSThread currentThread]);
-//    });
-    dispatch_semaphore_signal(self.lock);
-  
-    
-}
+
 
 #pragma mark-
 #pragma mark- UITableviewDataSource && delegate
@@ -361,15 +349,122 @@
 }
 
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
+    HJGCDViewController * vc = [[HJGCDViewController alloc] init];
+    vc.title = cell.textLabel.text;
+    switch (indexPath.section) {
+        case 0:
+        {
+            //异步函数
+            switch (indexPath.row) {
+                case 0:
+                {
+                    //异步函数 目标队列：并行队列
+                    vc.GCDType = HJGCDTypeAsyncConcurrenQueue;
+                }
+                    break;
+                case 1:
+                {
+                    //异步函数 目标队列 ：串行队列(非主线程队列)
+                    vc.GCDType = HJGCDTypeAsyncSerialQueue;
+
+                }
+                    break;
+                    
+                case 2:
+                {
+                    //目标队列：串行队列（主线程队列）
+                    vc.GCDType = HJGCDTypeAsyncMainQueue;
+
+                }
+                    break;
+                    
+            }
+            
+            
+        }
+            break;
+            
+        case 1:
+        {
+            //同步函数
+            switch (indexPath.row) {
+                case 0:
+                {
+                    // 同步函数 目标队列 ：串行队列(非主线程队列)
+                vc.GCDType = HJGCDTypeSyncSerialQueue;
+
+                    
+                }
+                    break;
+                    
+                case 1:
+                {
+                    //同步函数 目标队列 ：串行队列(主线程队列)
+                    vc.GCDType = HJGCDTypeSyncMainQueue;
+
+                }
+                    break;
+                    
+                case 2:
+                {
+                    //同步函数 目标队列 ： 并行队列
+                    vc.GCDType = HJGCDTypeSyncConcureenQueue;
+
+                }
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+        }
+            break;
+            
+        case 2:
+        {
+            // 异步同步混合
+            switch (indexPath.row) {
+                case 0:
+                {
+                    //异步函数 block里调同步函数
+                    vc.GCDType = HJGCDTypeAsyncSync;
+
+                }
+                    break;
+                    
+                case 1:
+                {
+                    //同步函数 block里调异步函数
+                    vc.GCDType = HJGCDTypeSyncAsync;
+
+                }
+                    break;
+                    
+                    
+                default:
+                    break;
+            }
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 #pragma mark-
 #pragma mark- Setter && Getter
 - (UITableView *)tableView {
     if (!_tableView) {
         _tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStyleGrouped];
+        [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
+        [_tableView registerClass:[UITableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:NSStringFromClass([UITableViewHeaderFooterView class])];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
-        [_tableView registerClass:[UITableViewHeaderFooterView class] forCellReuseIdentifier:NSStringFromClass([UITableViewHeaderFooterView class])];
         _tableView.rowHeight = 50.f;
     }
     return _tableView;
@@ -382,11 +477,6 @@
     return _lock;
 }
 
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 
 @end
